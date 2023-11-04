@@ -53,7 +53,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                 //Ajoutez ici d�autres case pour g�rer d�autres commandes.
                 case "MSG":
                     aliasExpediteur = cnx.getAlias();
-                    msg = cnx.getAvailableText();
+                    msg = evenement.getArgument();
                     serveur.envoyerAtousSauf(msg, aliasExpediteur);
 
                 default: //Renvoyer le texte recu convertit en majuscules :
