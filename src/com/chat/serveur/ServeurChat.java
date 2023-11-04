@@ -3,6 +3,7 @@ package com.chat.serveur;
 import com.chat.commun.net.Connexion;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Cette classe �tend (h�rite) la classe abstraite Serveur et y ajoute le n�cessaire pour que le
@@ -13,6 +14,7 @@ import java.util.ArrayList;
  * @since 2023-09-15
  */
 public class ServeurChat extends Serveur {
+    private Vector<String> msgHistory = new Vector<String>();
 
     /**
      * Cr�e un serveur de chat qui va �couter sur le port sp�cifi�.
@@ -94,13 +96,26 @@ public class ServeurChat extends Serveur {
      */
     public String historique() {
         String s = "";
+        for(int i = 0; i<msgHistory.size(); i++){
+            s+=msgHistory.elementAt(i);
+            if(i!=msgHistory.size()-1){
+                s+="\n\t\t\t.";
+            }
+        }
         return s;
     }
 
     public void envoyerAtousSauf(String str, String aliasExpediteur) {
+        String msg = aliasExpediteur+">>"+str;
         for (Connexion cnx:connectes)
             if(cnx.getAlias()!=aliasExpediteur){
-                cnx.envoyer(aliasExpediteur+">>"+str);
+                cnx.envoyer(msg);
+
             }
+        ajouterHistorique(msg);
+    }
+
+    public void ajouterHistorique(String msg){
+        msgHistory.add(msg);
     }
 }
