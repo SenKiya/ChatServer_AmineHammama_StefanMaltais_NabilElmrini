@@ -16,6 +16,8 @@ import java.util.Vector;
 public class ServeurChat extends Serveur {
     private Vector<String> msgHistory = new Vector<String>();
 
+    private Vector<Invitation> invitations = new Vector<>();
+    private Vector<SalonPrive> salonsPrives = new Vector<>();
     /**
      * Cr�e un serveur de chat qui va �couter sur le port sp�cifi�.
      *
@@ -115,7 +117,33 @@ public class ServeurChat extends Serveur {
         ajouterHistorique(msg);
     }
 
+    public void envoyerExpediteurAReceveur(String str, String aliasReceveur, String aliasExpediteur) {
+        String msg = aliasExpediteur+" "+str;
+        for (Connexion cnx:connectes)
+            if(cnx.getAlias().equals(aliasReceveur)){
+                cnx.envoyer(msg);
+            }
+    }
+
+    public void envoyerAUnePersonne(String str, String alias){
+
+        for (Connexion cnx:connectes)
+            if(cnx.getAlias().equals(alias)){
+                cnx.envoyer(str);
+            }
+
+    }
+
+
+
+
     public void ajouterHistorique(String msg){
         msgHistory.add(msg);
     }
+
+
+
+
+
+
 }

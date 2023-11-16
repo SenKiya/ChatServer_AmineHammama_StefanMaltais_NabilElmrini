@@ -226,4 +226,9 @@ public class Serveur implements Lecteur {
     public boolean isDemarre() {
         return demarre;
     }
+
+
+
 }
+
+
