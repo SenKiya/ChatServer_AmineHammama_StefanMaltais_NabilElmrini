@@ -38,6 +38,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
         Connexion cnx;
         String msg, typeEvenement, aliasExpediteur, alias1, alias2;
         ServeurChat serveur = (ServeurChat) this.serveur;
+        int i;
         boolean existe = false;
         if (source instanceof Connexion) {
             cnx = (Connexion) source;
@@ -61,7 +62,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     break;
 
                 case "JOIN":
-                    int i;
+
                     alias1 = cnx.getAlias();
                     alias2 = evenement.getArgument();
                     Invitation invitationExist = new Invitation(alias2, alias1);
