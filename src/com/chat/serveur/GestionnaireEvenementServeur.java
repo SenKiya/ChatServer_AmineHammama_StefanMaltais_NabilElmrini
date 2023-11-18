@@ -38,6 +38,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
         Connexion cnx;
         String msg, typeEvenement, aliasExpediteur, alias1, alias2;
         ServeurChat serveur = (ServeurChat) this.serveur;
+        boolean existe = false;
         if (source instanceof Connexion) {
             cnx = (Connexion) source;
             System.out.println("SERVEUR-Recu : " + evenement.getType() + " " + evenement.getArgument());
@@ -63,13 +64,13 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     int i;
                     alias1 = cnx.getAlias();
                     alias2 = evenement.getArgument();
-                    boolean existe = false;
                     Invitation invitationExist = new Invitation(alias2, alias1);
                     Invitation invitationNonExist = new Invitation(alias1, alias2);
                     SalonPrive salonPrivePossible = new SalonPrive(alias2, alias1);
-                    String inviteExiste1 = "vient d'accepter votre invitation à chatter en privé.\nVous pouvez maintenant communiquer entre vous deux en utilisant la commande : PRV "+alias1+  " message";
-                    String inviteExiste2 = "Vous avez accepté une invitation à chatter en privé. \nVous pouvez maintenant communiquer entre vous deux en utilisant la commande : PRV "+alias2+  " message";
-                    String inviteNonExistant = "vient de vous envoyer une invitation. \nPour accepter, veuillez écrire la commande suivante : JOIN "+alias1+" \nPour refuser, veuillez écrire la commande suivante : DECLINE "+alias1;
+                    String inviteExiste1 = "vient d'accepter votre invitation à chatter en privé.\n\t\t\t Vous pouvez maintenant communiquer entre vous deux en utilisant la commande : PRV "+alias1+  " message";
+                    String inviteExiste2 = "Vous avez accepté une invitation à chatter en privé. \n\t\t\t Vous pouvez maintenant communiquer entre vous deux en utilisant la commande : PRV "+alias2+  " message";
+                    String inviteNonExistant1 = "vient de vous envoyer une invitation. \n\t\t\t Pour accepter, veuillez écrire la commande suivante : JOIN "+alias1+" \n\t\t\t Pour refuser, veuillez écrire la commande suivante : DECLINE "+alias1;
+                    String inviteNonExistant2 = "Votre invitation à "+ alias2 + " a été envoyée";
                     for(i=0;i<invitations.size();i++) {
                         if(invitationExist.getAlias2().equals(invitations.get(i).getAlias2()) && invitationExist.getAlias1().equals(invitations.get(i).getAlias1())){
                             serveur.envoyerExpediteurAReceveur(inviteExiste1, alias2, alias1);
@@ -81,7 +82,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     }
                     if(!existe) {
-                        serveur.envoyerExpediteurAReceveur(inviteNonExistant, alias2, alias1);
+                        serveur.envoyerExpediteurAReceveur(inviteNonExistant1, alias2, alias1);
+                        serveur.envoyerAUnePersonne(inviteNonExistant2, alias1);
                         invitations.add(invitationNonExist);
                     }
 
@@ -89,8 +91,97 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                 case "DECLINE":
 
+                    alias1 = cnx.getAlias();
+                    alias2 = evenement.getArgument();
+                    Invitation invitationRefuse = new Invitation(alias2, alias1);
+                    Invitation invitationAnnule = new Invitation(alias1, alias2);
+                    String inviteRefuse1 = "Vous avez refusé l'invitation de "+alias2;
+                    String inviteRefuse2 = " vient de refuser votre invitation";
+                    String inviteAnnule1 = "Vous avez annulé l'invitation que vous avez envoyé à " + alias2;
+                    String inviteAnnule2 = " vient d'annuler l'invitation";
+                    String inviteInexistant = "Une invitation avec "+alias2+" n'existe pas";
+
+
+                    for(i=0;i<invitations.size();i++) {
+                        if(invitationRefuse.getAlias2().equals(invitations.get(i).getAlias2()) && invitationRefuse.getAlias1().equals(invitations.get(i).getAlias1())){
+                            serveur.envoyerExpediteurAReceveur(inviteRefuse2, alias2, alias1);
+                            serveur.envoyerAUnePersonne(inviteRefuse1, alias1);
+                            invitations.remove(i);
+
+                            existe = true;
+                        } else if (invitationAnnule.getAlias2().equals(invitations.get(i).getAlias2()) && invitationAnnule.getAlias1().equals(invitations.get(i).getAlias1())){
+                            serveur.envoyerExpediteurAReceveur(inviteAnnule2, alias2, alias1);
+                            serveur.envoyerAUnePersonne(inviteAnnule1, alias1);
+                            invitations.remove(i);
+                            existe = true;
+                        }
+
+                    }
+                    if(!existe) {
+                        serveur.envoyerAUnePersonne(inviteInexistant, alias1);
+                    }
 
                     break;
+
+                case "INV":
+                    alias1 = cnx.getAlias();
+
+                    for(i=0;i<invitations.size();i++) {
+                        if(alias1.equals(invitations.get(i).getAlias2()) ){
+
+                            serveur.envoyerAUnePersonne(invitations.get(i).getAlias1()+"\n\t\t\t ", alias1);
+
+
+                            existe = true;
+                        } else if (alias1.equals(invitations.get(i).getAlias1())) {
+
+                            serveur.envoyerAUnePersonne(invitations.get(i).getAlias2()+"\n\t\t\t ", alias1);
+                            existe = true;
+                        }
+
+                    }
+
+                    if(!existe) {
+                        serveur.envoyerAUnePersonne("Vous n'avez aucune invitation en cours", alias1);
+                    }
+                    break;
+
+                case "PRV":
+                    alias1 = cnx.getAlias();
+                    alias2 = evenement.getArgument();
+                    SalonPrive salonPrive1 = new SalonPrive(alias2, alias1);
+                    SalonPrive salonPrive2 = new SalonPrive(alias1, alias2);
+
+
+
+                    break;
+
+                case "QUIT":
+
+                    alias1 = cnx.getAlias();
+                    alias2 = evenement.getArgument();
+                    SalonPrive salonQuit1 = new SalonPrive(alias2, alias1);
+                    SalonPrive salonQuit2 = new SalonPrive(alias1, alias2);
+                    String msgQuit1 = " vient de quitter le salon privé";
+                    String msgQuit2 = "Vous avez quitté le salon privé avec " + alias2;
+                    String msgImpo = "Ce salon privé avec " +alias2 + " n'existe pas";
+                    for(i=0;i<salonsPrives.size();i++) {
+                        if((salonQuit1.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonQuit1.getAlias1().equals(salonsPrives.get(i).getAlias1())) || (salonQuit2.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonQuit2.getAlias1().equals(salonsPrives.get(i).getAlias1()))){
+                            serveur.envoyerExpediteurAReceveur(msgQuit1, alias2, alias1);
+                            serveur.envoyerAUnePersonne(msgQuit2, alias1);
+                            salonsPrives.remove(i);
+
+                            existe = true;
+                        }
+
+                    }
+                    if(!existe) {
+                        serveur.envoyerAUnePersonne(msgImpo, alias1);
+                    }
+
+
+                    break;
+
                 case "HIST":
                     cnx.envoyer(serveur.historique());
                     break;
