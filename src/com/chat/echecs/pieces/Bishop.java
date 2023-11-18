@@ -1,8 +1,8 @@
 package com.chat.echecs.pieces;
 
-import com.echecs.PartieEchecs;
-import com.echecs.Position;
-import com.echecs.util.EchecsUtil;
+import com.chat.echecs.PartieEchecs;
+import com.chat.echecs.Position;
+import com.chat.echecs.util.EchecsUtil;
 
 public class Bishop extends Piece{
     public Bishop(char couleur) {

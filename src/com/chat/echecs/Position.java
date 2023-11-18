@@ -1,6 +1,6 @@
 package com.chat.echecs;
 
-import com.echecs.util.EchecsUtil;
+import com.chat.echecs.util.EchecsUtil;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Représente une position sur un échiquier de jeu d'échecs. Les lignes de

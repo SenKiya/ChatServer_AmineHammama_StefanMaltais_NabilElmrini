@@ -1,7 +1,7 @@
 package com.chat.echecs.pieces;
 
-import com.echecs.Position;
-import com.echecs.util.EchecsUtil;
+import com.chat.echecs.Position;
+import com.chat.echecs.util.EchecsUtil;
 
 public class Queen extends Piece {
     public Queen(char couleur) {

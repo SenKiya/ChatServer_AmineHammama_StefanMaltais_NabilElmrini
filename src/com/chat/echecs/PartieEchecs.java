@@ -1,7 +1,7 @@
 package com.chat.echecs;
 
-import com.echecs.pieces.*;
-import com.echecs.util.EchecsUtil;
+import com.chat.echecs.pieces.*;
+import com.chat.echecs.util.EchecsUtil;
 
 import java.util.Vector;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
