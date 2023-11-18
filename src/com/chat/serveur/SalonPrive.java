@@ -1,7 +1,10 @@
 package com.chat.serveur;
+
+import com.chat.echecs.PartieEchecs;
 public class SalonPrive {
     private String alias1;
     private String alias2;
+    private PartieEchecs partieEchecs;
 
     // Constructeur
     public SalonPrive(String alias1, String alias2) {
