@@ -36,7 +36,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     public void traiter(Evenement evenement) {
         Object source = evenement.getSource();
         Connexion cnx;
-        String msg, typeEvenement, aliasExpediteur, alias1, alias2;
+        String msg, typeEvenement, aliasExpediteur, alias1, alias2, texte, msgImpo;
         ServeurChat serveur = (ServeurChat) this.serveur;
         int i;
         boolean existe = false;
@@ -149,10 +149,24 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                 case "PRV":
                     alias1 = cnx.getAlias();
-                    alias2 = evenement.getArgument();
-                    SalonPrive salonPrive1 = new SalonPrive(alias2, alias1);
-                    SalonPrive salonPrive2 = new SalonPrive(alias1, alias2);
+                    texte = evenement.getArgument();
+                    String[] separe = texte.split(" ",2);
+                    SalonPrive salonPrive1 = new SalonPrive(separe[0], alias1);
+                    SalonPrive salonPrive2 = new SalonPrive(alias1, separe[0]);
+                    msgImpo = "Le salon privé avec " +separe[0] + " n'existe pas";
+                    for(i=0;i<salonsPrives.size();i++) {
+                        if((salonPrive1.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonPrive1.getAlias1().equals(salonsPrives.get(i).getAlias1())) || (salonPrive2.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonPrive2.getAlias1().equals(salonsPrives.get(i).getAlias1()))){
+                            serveur.envoyerExpediteurAReceveur(" : " + separe[1], separe[0], alias1);
+                            serveur.envoyerAUnePersonne("Me : " + separe[1], alias1);
 
+                            existe = true;
+                        }
+
+                    }
+
+                    if(!existe) {
+                        serveur.envoyerAUnePersonne(msgImpo, alias1);
+                    }
 
 
                     break;
@@ -165,7 +179,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     SalonPrive salonQuit2 = new SalonPrive(alias1, alias2);
                     String msgQuit1 = " vient de quitter le salon privé";
                     String msgQuit2 = "Vous avez quitté le salon privé avec " + alias2;
-                    String msgImpo = "Ce salon privé avec " +alias2 + " n'existe pas";
+                    msgImpo = "Le salon privé avec " +alias2 + " n'existe pas";
                     for(i=0;i<salonsPrives.size();i++) {
                         if((salonQuit1.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonQuit1.getAlias1().equals(salonsPrives.get(i).getAlias1())) || (salonQuit2.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonQuit2.getAlias1().equals(salonsPrives.get(i).getAlias1()))){
                             serveur.envoyerExpediteurAReceveur(msgQuit1, alias2, alias1);
