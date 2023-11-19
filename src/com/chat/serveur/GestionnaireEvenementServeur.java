@@ -4,6 +4,7 @@ import com.chat.commun.evenement.Evenement;
 import com.chat.commun.evenement.GestionnaireEvenement;
 import com.chat.commun.net.Connexion;
 import com.echecs.PartieEchecs;
+import com.echecs.Position;
 
 import java.util.ArrayList;
 
@@ -186,6 +187,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     String[] separermessage = texte.split(" ",2);
                     SalonPrive salonPriver1 = new SalonPrive(separermessage[0], alias1);
                     SalonPrive salonPriver2 = new SalonPrive(alias1, separermessage[0]);
+                    int random = (int)Math.floor(Math.random() * (2 - 1 + 1) + 1);
                     boolean found = false;
                     boolean full = false;
                     for(i=0;i<salonsPrives.size();i++) {
@@ -203,8 +205,19 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                         salonsPrives.get(i).setPartieEchecs(new PartieEchecs());
                                         salonsPrives.get(i).getPartieEchecs().setAliasJoueur1(alias1);
                                         salonsPrives.get(i).getPartieEchecs().setAliasJoueur2(separermessage[0]);
-                                        serveur.envoyerAUnePersonne("CHESSOK b", alias1);
-                                        serveur.envoyerAUnePersonne("CHESSOK n", separermessage[0]);
+                                        if(random == 1) {
+                                            serveur.envoyerAUnePersonne("CHESSOK b \n", alias1);
+                                            serveur.envoyerAUnePersonne("CHESSOK n \n", separermessage[0]);
+                                            salonsPrives.get(i).getPartieEchecs().setCouleurJoueur1('b');
+                                            salonsPrives.get(i).getPartieEchecs().setCouleurJoueur2('n');
+                                        } else if (random == 2) {
+                                            serveur.envoyerAUnePersonne("CHESSOK n \n", alias1);
+                                            serveur.envoyerAUnePersonne("CHESSOK b \n", separermessage[0]);
+                                            salonsPrives.get(i).getPartieEchecs().setCouleurJoueur1('n');
+                                            salonsPrives.get(i).getPartieEchecs().setCouleurJoueur2('b');
+                                        }
+                                        serveur.envoyerAUnePersonne(salonsPrives.get(i).getPartieEchecs().getEtat().toString(), salonsPrives.get(i).getAlias2());
+                                        serveur.envoyerAUnePersonne(salonsPrives.get(i).getPartieEchecs().getEtat().toString(), salonsPrives.get(i).getAlias1());
                                         invitationEchecs.remove(m);
                                         found = true;
                                     }
@@ -266,12 +279,96 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     break;
 
+
+
+
                 case "HIST":
                     cnx.envoyer(serveur.historique());
                     break;
 
                 case "MOVE":
+                    alias1 = cnx.getAlias();
                     msg = evenement.getArgument();
+                    char posI1 = '0', posF1 = '0';
+                    byte posI2 = 0, posF2 = 0;
+
+
+                    boolean possible;
+                    if(msg.length()<5){
+                        posI1 = msg.charAt(0);
+                        posI2 = (byte) (Character.getNumericValue(msg.charAt(1)));
+                        posF1 = msg.charAt(2);
+                        posF2 = (byte) (Character.getNumericValue(msg.charAt(3)));
+                        serveur.envoyerAUnePersonne(" "+posI1+posI2+posF1+posF2, alias1);
+
+
+                        possible = true;
+
+                    } else if(msg.length()<6 && (msg.substring(2,3).equals("-") || msg.substring(2,3).equals(" "))){
+
+                        posI1 = msg.charAt(0);
+                        posI2 = (byte) (Character.getNumericValue(msg.charAt(1)));
+                        posF1 = msg.charAt(3);
+                        posF2 = (byte) (Character.getNumericValue(msg.charAt(4)));
+                        serveur.envoyerAUnePersonne(" "+posI1+posI2+posF1+posF2, alias1);
+
+                        possible = true;
+
+                    } else {
+
+                        possible = false;
+
+                    }
+
+                    Position init = new Position(posI1, posI2);
+                    Position finale = new Position(posF1, posF2);
+
+                    for(i=0;i<salonsPrives.size();i++) {
+                        if((alias1.equals(salonsPrives.get(i).getAlias2()) || (alias1.equals(salonsPrives.get(i).getAlias1())) && !salonsPrives.get(i).getPartieEchecs().equals(null))){
+                            if (possible && salonsPrives.get(i).getPartieEchecs().deplacer(init, finale)){
+                                serveur.envoyerAUnePersonne(msg, salonsPrives.get(i).getAlias2());
+                                serveur.envoyerAUnePersonne(msg, salonsPrives.get(i).getAlias1());
+
+
+                                serveur.envoyerAUnePersonne(salonsPrives.get(i).getPartieEchecs().getEtat().toString(), salonsPrives.get(i).getAlias2());
+                                serveur.envoyerAUnePersonne(salonsPrives.get(i).getPartieEchecs().getEtat().toString(), salonsPrives.get(i).getAlias1());
+
+                            } else {
+                                serveur.envoyerAUnePersonne("INVALID", alias1);
+
+                            }
+
+
+                        }
+                        if(salonsPrives.get(i).getPartieEchecs().estEnEchec() !='x' && !salonsPrives.get(i).getPartieEchecs().checkmate(salonsPrives.get(i).getPartieEchecs().estEnEchec())){
+
+                            if(salonsPrives.get(i).getPartieEchecs().estEnEchec() == salonsPrives.get(i).getPartieEchecs().getCouleurJoueur1()) {
+                                serveur.envoyerAUnePersonne("ECHEC " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur1(), salonsPrives.get(i).getAlias2());
+                                serveur.envoyerAUnePersonne("ECHEC " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur1(), salonsPrives.get(i).getAlias1());
+                            }
+                            else if(salonsPrives.get(i).getPartieEchecs().estEnEchec() == salonsPrives.get(i).getPartieEchecs().getCouleurJoueur2()) {
+                                serveur.envoyerAUnePersonne("ECHEC " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur2(), salonsPrives.get(i).getAlias2());
+                                serveur.envoyerAUnePersonne("ECHEC " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur2(), salonsPrives.get(i).getAlias1());
+                            }
+                        }else if (salonsPrives.get(i).getPartieEchecs().estEnEchec() !='x' && salonsPrives.get(i).getPartieEchecs().checkmate(salonsPrives.get(i).getPartieEchecs().estEnEchec())) {
+
+                            if(salonsPrives.get(i).getPartieEchecs().estEnEchec() == salonsPrives.get(i).getPartieEchecs().getCouleurJoueur1()) {
+                                serveur.envoyerAUnePersonne("MAT " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur2(), salonsPrives.get(i).getAlias2());
+                                serveur.envoyerAUnePersonne("MAT " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur2(), salonsPrives.get(i).getAlias1());
+                                salonsPrives.get(i).setPartieEchecs(null);
+                            }
+                            else if(salonsPrives.get(i).getPartieEchecs().estEnEchec() == salonsPrives.get(i).getPartieEchecs().getCouleurJoueur2()) {
+                                serveur.envoyerAUnePersonne("MAT " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur1(), salonsPrives.get(i).getAlias2());
+                                serveur.envoyerAUnePersonne("MAT " + salonsPrives.get(i).getPartieEchecs().getAliasJoueur1(), salonsPrives.get(i).getAlias1());
+                                salonsPrives.get(i).setPartieEchecs(null);
+                            }
+
+                        }
+                    }
+
+
+
+
 
                     break;
 

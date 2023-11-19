@@ -19,7 +19,7 @@ public class EtatPartieEchecs {
             etatEchiquier[1][i]='p';
         }
 
-        for(int i=0; i<6;i++){
+        for(int i=2; i<6;i++){
             for(int j = 0; j<8; j++){
                 etatEchiquier[i][j]=' ';
             }
