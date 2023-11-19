@@ -23,6 +23,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     ArrayList<Invitation> invitationEchecs = new ArrayList<>();
 
 
+
+
     /**
      * Construit un gestionnaire d'�v�nements pour un serveur.
      *
@@ -272,6 +274,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     msg = evenement.getArgument();
 
                     break;
+
+
 
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();

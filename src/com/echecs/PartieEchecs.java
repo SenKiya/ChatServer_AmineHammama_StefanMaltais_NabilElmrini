@@ -1,9 +1,9 @@
 package com.echecs;
 
 import com.echecs.pieces.*;
-import com.echecs.pieces.*;
 import com.echecs.util.EchecsUtil;
 
+import java.util.ListIterator;
 import java.util.Vector;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -30,13 +30,18 @@ public class    PartieEchecs {
      * La couleur de celui à qui c'est le tour de jouer (n ou b).
      */
     private char tour = 'b'; //Les blancs commencent toujours
+    private Vector<Position> positions;
+    private ListIterator<Position> iterateur;
 
+    private EtatPartieEchecs etat;
     /**
      * Crée un échiquier de jeu d'échecs avec les pièces dans leurs positions
      * initiales de début de partie.
      * Répartit au hasard les couleurs n et b entre les 2 joueurs.
      */
     public PartieEchecs() {
+        positions =new Vector<Position>();
+        iterateur = positions.listIterator();
         echiquier = new Piece[8][8];
         //Placement des pièces :
         echiquier[0][0] = new Rook('n');
@@ -138,7 +143,7 @@ public class    PartieEchecs {
         Position piecePos;
         char roicouleur;
         char result = 'x';
-        Vector<Position> positions = new Vector<Position>();
+
         boolean b = false;
         boolean n = false;
         Piece p;
@@ -160,7 +165,7 @@ public class    PartieEchecs {
             }
         }
 
-        var iterateur = positions.listIterator();
+
         while (iterateur.hasNext()) {
             Position temp = iterateur.next();
             p = echiquier[temp.getLigne()][temp.getColonne()];
@@ -179,31 +184,68 @@ public class    PartieEchecs {
         } else if (n) {
             result = 'n';
         }
-            return result;
-        }
-       public boolean deplacerTempVerifEchec(Position pos1, Position pos2){
+        return result;
+    }
+    public boolean deplacerTempVerifEchec(Position pos1, Position pos2){
         Piece b=echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)];
-           echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)]=echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)];
-           echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)] =null;
-           if(estEnEchec()==tour){
-               echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)]=echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)];
-               echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)] =b;
-               return true;
-           }
-           echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)]=echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)];
-           echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)] =b;
+        echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)]=echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)];
+        echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)] =null;
+        if(estEnEchec()==tour){
+            echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)]=echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)];
+            echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)] =b;
+            return true;
+        }
+        echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)]=echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)];
+        echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)] =b;
         return false;
-       }
-        private boolean deplacer(Position pos1, Position pos2){
+    }
+    private boolean deplacer(Position pos1, Position pos2){
         if(deplace(pos1,pos2)){
             echiquier[EchecsUtil.indiceLigne(pos2)][EchecsUtil.indiceColonne(pos2)]=echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)];
             echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)] =null;
+            checkmate(estEnEchec());
+            changerTour();
+            etat.setEtatEchiquier(updateBoard());
             return true;
         }
         return false;
+    }
+    public boolean checkmate(char echec){
+        char res=echec;
+        Position roiEchec;
+        if(res!='x'){
+            while (iterateur.hasPrevious()){
+                Position temp=iterateur.previous();
+                if (echiquier[temp.getLigne()][temp.getColonne()].getCouleur()==res){
+                    for(int i=0;i<8;i++){
+                        for(int j=0;j<8;j++){
+                            Piece b=echiquier[i][j];
+                            Position ite = new Position((char)('a'+j), (byte)(8-i));
+                            if(deplace(temp,ite)) {
+                                echiquier[i][j] = echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)];
+                                echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)] = null;
+                                if (estEnEchec() != res) {
+                                    echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)] = echiquier[i][j];
+                                    echiquier[i][j] = b;
+                                    positions.clear();
+                                    return false;
+                                }else {
+                                    echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)] = echiquier[i][j];
+                                    echiquier[i][j] = b;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        private char[][] updateBoard(){
+
+        positions.clear();
+        return true;
+    }
+
+    private char[][] updateBoard(){
         char[][] temp =new char[8][8];
         for (int i=0;i<8;i++){
             for (int j=0;j<8;j++) {
@@ -257,55 +299,55 @@ public class    PartieEchecs {
             }
         }
         return temp;
-        }
-        /**
-         * Retourne la couleur n ou b du joueur qui a la main.
-         *
-         * @return char la couleur du joueur à qui c'est le tour de jouer.
-         */
-        public char getTour () {
-            return tour;
-        }
-        /**
-         * Retourne l'alias du premier joueur.
-         * @return String alias du premier joueur.
-         */
-        public String getAliasJoueur1 () {
-            return aliasJoueur1;
-        }
-        /**
-         * Modifie l'alias du premier joueur.
-         * @param aliasJoueur1 String nouvel alias du premier joueur.
-         */
-        public void setAliasJoueur1 (String aliasJoueur1){
-            this.aliasJoueur1 = aliasJoueur1;
-        }
-        /**
-         * Retourne l'alias du deuxième joueur.
-         * @return String alias du deuxième joueur.
-         */
-        public String getAliasJoueur2 () {
-            return aliasJoueur2;
-        }
-        /**
-         * Modifie l'alias du deuxième joueur.
-         * @param aliasJoueur2 String nouvel alias du deuxième joueur.
-         */
-        public void setAliasJoueur2 (String aliasJoueur2){
-            this.aliasJoueur2 = aliasJoueur2;
-        }
-        /**
-         * Retourne la couleur n ou b du premier joueur.
-         * @return char couleur du premier joueur.
-         */
-        public char getCouleurJoueur1 () {
-            return couleurJoueur1;
-        }
-        /**
-         * Retourne la couleur n ou b du deuxième joueur.
-         * @return char couleur du deuxième joueur.
-         */
-        public char getCouleurJoueur2 () {
-            return couleurJoueur2;
-        }
     }
+    /**
+     * Retourne la couleur n ou b du joueur qui a la main.
+     *
+     * @return char la couleur du joueur à qui c'est le tour de jouer.
+     */
+    public char getTour () {
+        return tour;
+    }
+    /**
+     * Retourne l'alias du premier joueur.
+     * @return String alias du premier joueur.
+     */
+    public String getAliasJoueur1 () {
+        return aliasJoueur1;
+    }
+    /**
+     * Modifie l'alias du premier joueur.
+     * @param aliasJoueur1 String nouvel alias du premier joueur.
+     */
+    public void setAliasJoueur1 (String aliasJoueur1){
+        this.aliasJoueur1 = aliasJoueur1;
+    }
+    /**
+     * Retourne l'alias du deuxième joueur.
+     * @return String alias du deuxième joueur.
+     */
+    public String getAliasJoueur2 () {
+        return aliasJoueur2;
+    }
+    /**
+     * Modifie l'alias du deuxième joueur.
+     * @param aliasJoueur2 String nouvel alias du deuxième joueur.
+     */
+    public void setAliasJoueur2 (String aliasJoueur2){
+        this.aliasJoueur2 = aliasJoueur2;
+    }
+    /**
+     * Retourne la couleur n ou b du premier joueur.
+     * @return char couleur du premier joueur.
+     */
+    public char getCouleurJoueur1 () {
+        return couleurJoueur1;
+    }
+    /**
+     * Retourne la couleur n ou b du deuxième joueur.
+     * @return char couleur du deuxième joueur.
+     */
+    public char getCouleurJoueur2 () {
+        return couleurJoueur2;
+    }
+}
