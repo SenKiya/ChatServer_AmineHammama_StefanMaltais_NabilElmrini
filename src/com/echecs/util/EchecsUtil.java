@@ -1,6 +1,6 @@
-package com.chat.echecs.util;
+package com.echecs.util;
 
-import com.chat.echecs.Position;
+import com.echecs.Position;
 
 /**
  * Classe utilitaire pour le jeu d'échecs.

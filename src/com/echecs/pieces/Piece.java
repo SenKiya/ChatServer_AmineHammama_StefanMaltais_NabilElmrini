@@ -1,6 +1,7 @@
-package com.chat.echecs.pieces;
+package com.echecs.pieces;
 
-import com.chat.echecs.Position;
+import com.echecs.Position;
+
 /**
  * Représente une pièce dans un jeu d'échecs. Cette classe abstraite constitue
  * la base pour les classes de pièces concrètes.

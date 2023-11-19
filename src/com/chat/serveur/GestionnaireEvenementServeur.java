@@ -3,6 +3,8 @@ package com.chat.serveur;
 import com.chat.commun.evenement.Evenement;
 import com.chat.commun.evenement.GestionnaireEvenement;
 import com.chat.commun.net.Connexion;
+import com.echecs.PartieEchecs;
+
 import java.util.ArrayList;
 
 /**
@@ -17,6 +19,9 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     private Serveur serveur;
     ArrayList<Invitation> invitations = new ArrayList<>();
     ArrayList<SalonPrive> salonsPrives = new ArrayList<>();
+
+    ArrayList<Invitation> invitationEchecs = new ArrayList<>();
+
 
     /**
      * Construit un gestionnaire d'�v�nements pour un serveur.
@@ -72,20 +77,22 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     String inviteExiste2 = "Vous avez accepté une invitation à chatter en privé. \n\t\t\t Vous pouvez maintenant communiquer entre vous deux en utilisant la commande : PRV "+alias2+  " message";
                     String inviteNonExistant1 = "vient de vous envoyer une invitation. \n\t\t\t Pour accepter, veuillez écrire la commande suivante : JOIN "+alias1+" \n\t\t\t Pour refuser, veuillez écrire la commande suivante : DECLINE "+alias1;
                     String inviteNonExistant2 = "Votre invitation à "+ alias2 + " a été envoyée";
-                    for(i=0;i<invitations.size();i++) {
-                        if(invitationExist.getAlias2().equals(invitations.get(i).getAlias2()) && invitationExist.getAlias1().equals(invitations.get(i).getAlias1())){
-                            serveur.envoyerExpediteurAReceveur(inviteExiste1, alias2, alias1);
-                            serveur.envoyerAUnePersonne(inviteExiste2, alias1);
-                            salonsPrives.add(salonPrivePossible);
-                            invitations.remove(i);
-                            existe = true;
-                        }
+                    if(!alias2.equals(alias1)){
+                        for(i=0;i<invitations.size();i++) {
+                            if(invitationExist.getAlias2().equals(invitations.get(i).getAlias2()) && invitationExist.getAlias1().equals(invitations.get(i).getAlias1())){
+                                serveur.envoyerExpediteurAReceveur(inviteExiste1, alias2, alias1);
+                                serveur.envoyerAUnePersonne(inviteExiste2, alias1);
+                                salonsPrives.add(salonPrivePossible);
+                                invitations.remove(i);
+                                existe = true;
+                            }
 
-                    }
-                    if(!existe) {
-                        serveur.envoyerExpediteurAReceveur(inviteNonExistant1, alias2, alias1);
-                        serveur.envoyerAUnePersonne(inviteNonExistant2, alias1);
-                        invitations.add(invitationNonExist);
+                        }
+                        if(!existe) {
+                            serveur.envoyerExpediteurAReceveur(inviteNonExistant1, alias2, alias1);
+                            serveur.envoyerAUnePersonne(inviteNonExistant2, alias1);
+                            invitations.add(invitationNonExist);
+                        }
                     }
 
                     break;
@@ -166,6 +173,66 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     if(!existe) {
                         serveur.envoyerAUnePersonne(msgImpo, alias1);
+                    }
+
+
+                    break;
+
+                case "CHESS":
+                    alias1 = cnx.getAlias();
+                    texte = evenement.getArgument();
+                    String[] separermessage = texte.split(" ",2);
+                    SalonPrive salonPriver1 = new SalonPrive(separermessage[0], alias1);
+                    SalonPrive salonPriver2 = new SalonPrive(alias1, separermessage[0]);
+                    boolean found = false;
+                    boolean full = false;
+                    for(i=0;i<salonsPrives.size();i++) {
+                        if((salonsPrives.get(i).getAlias1().equals(alias1)||salonsPrives.get(i).getAlias2().equals(alias1)||salonsPrives.get(i).getAlias1().equals(separermessage[0])||salonsPrives.get(i).getAlias2().equals(separermessage[0])) && salonsPrives.get(i).getPartieEchecs()!=null){
+                            full = true;
+                        }
+                    }
+
+                    if(alias1!=separermessage[0] && !full){
+                        for(i=0;i<salonsPrives.size();i++) {
+                            if((salonPriver1.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonPriver1.getAlias1().equals(salonsPrives.get(i).getAlias1())) || (salonPriver2.getAlias2().equals(salonsPrives.get(i).getAlias2()) && salonPriver2.getAlias1().equals(salonsPrives.get(i).getAlias1()))){
+                                for(int m = 0; m<invitationEchecs.size(); m++){
+
+                                    if(invitationEchecs.get(m).getAlias1().equals(alias1)||invitationEchecs.get(m).getAlias1().equals(separermessage[0])&& invitationEchecs.get(m).getAlias2().equals(separermessage[0])||invitationEchecs.get(m).getAlias2().equals(alias1)){
+                                        salonsPrives.get(i).setPartieEchecs(new PartieEchecs());
+                                        salonsPrives.get(i).getPartieEchecs().setAliasJoueur1(alias1);
+                                        salonsPrives.get(i).getPartieEchecs().setAliasJoueur2(separermessage[0]);
+                                        serveur.envoyerAUnePersonne("CHESSOK b", alias1);
+                                        serveur.envoyerAUnePersonne("CHESSOK n", separermessage[0]);
+                                        invitationEchecs.remove(m);
+                                        found = true;
+                                    }
+
+                                }
+                                if(!found){
+                                    invitationEchecs.add(new Invitation(alias1, separermessage[0]));
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+
+                    break;
+
+                case "ABANDON":
+                    alias1 = cnx.getAlias();
+                    for(int j = 0; j<salonsPrives.size(); j++) {
+                        if (salonsPrives.get(j).getPartieEchecs() != null && (salonsPrives.get(j).getAlias1().equals(alias1) || salonsPrives.get(j).getAlias2().equals(alias1))) {
+                            if (salonsPrives.get(j).getAlias1().equals(alias1)) {
+                                serveur.envoyerAUnePersonne(salonsPrives.get(j).getAlias2() + " gagne!", salonsPrives.get(j).getAlias2());
+                            } else {
+                                serveur.envoyerAUnePersonne(salonsPrives.get(j).getAlias1() + " gagne!", salonsPrives.get(j).getAlias1());
+                            }
+                            salonsPrives.get(j).setPartieEchecs(null);
+                        }
+
                     }
 
 

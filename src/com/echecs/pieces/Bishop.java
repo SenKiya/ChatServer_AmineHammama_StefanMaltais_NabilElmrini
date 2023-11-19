@@ -1,11 +1,11 @@
-package com.chat.echecs.pieces;
+package com.echecs.pieces;
 
-import com.chat.echecs.PartieEchecs;
-import com.chat.echecs.Position;
-import com.chat.echecs.util.EchecsUtil;
+import com.echecs.PartieEchecs;
+import com.echecs.Position;
+import com.echecs.util.EchecsUtil;
 
-public class Pawn extends Piece {
-    public Pawn(char couleur) {
+public class Bishop extends Piece{
+    public Bishop(char couleur) {
         super(couleur);
     }
 
@@ -20,43 +20,45 @@ public class Pawn extends Piece {
         if(partieEchecs.deplace(pos1,pos2)){
             if(pos1.estSurLaMemeDiagonaleQue(pos2)){
                 if(ligne1<ligne2 && colonne1<colonne2){
+                    int j=ligne1;
                     for(int i = colonne1; i<colonne2;i++){
-                        for(int j = ligne1; j<ligne2;j++){
-                            if(echiquier[i][j]!=null){
-                                return false;
-                            }
+                        if(echiquier[i][j]!=null){
+                            return false;
                         }
+                        j++;
                     }
                 }
                 else if(ligne1<ligne2 && colonne1>colonne2){
+                    int j=ligne1;
                     for(int i = colonne1; i>colonne2;i--){
-                        for(int j = ligne1; j<ligne2;j++){
-                            if(echiquier[i][j]!=null){
-                                return false;
-                            }
+                        if(echiquier[i][j]!=null){
+                            return false;
                         }
+                        j++;
                     }
+
 
                 }
                 else if(ligne1>ligne2 && colonne1<colonne2){
+                    int j=ligne1;
                     for(int i = colonne1; i<colonne2;i++){
-                        for(int j = ligne1; j>ligne2;j--){
-                            if(echiquier[i][j]!=null){
-                                return false;
-                            }
+                        if(echiquier[i][j]!=null){
+                            return false;
                         }
+                        j--;
                     }
-
                 }
                 else if(ligne1>ligne2 && colonne1>colonne2){
+                    int j=ligne1;
                     for(int i = colonne1; i>colonne2;i--){
-                        for(int j = ligne1; j>ligne2;j--){
-                            if(echiquier[i][j]!=null){
-                                return false;
-                            }
+                        if(echiquier[i][j]!=null){
+                            return false;
                         }
+                        j--;
                     }
-
+                }
+                if(echiquier[colonne1][ligne1].getCouleur()!=echiquier[colonne2][ligne2].getCouleur()){
+                    return true;
                 }
             }
         }

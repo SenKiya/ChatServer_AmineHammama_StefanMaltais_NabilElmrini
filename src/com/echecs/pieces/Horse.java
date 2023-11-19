@@ -1,8 +1,8 @@
-package com.chat.echecs.pieces;
+package com.echecs.pieces;
 
-import com.chat.echecs.PartieEchecs;
-import com.chat.echecs.Position;
-import com.chat.echecs.util.EchecsUtil;
+import com.echecs.PartieEchecs;
+import com.echecs.Position;
+import com.echecs.util.EchecsUtil;
 
 public class Horse extends Piece{
     public Horse(char couleur) {

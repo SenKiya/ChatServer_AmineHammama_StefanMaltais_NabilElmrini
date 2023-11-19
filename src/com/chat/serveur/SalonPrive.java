@@ -1,5 +1,5 @@
 package com.chat.serveur;
-import com.chat.echecs.PartieEchecs;
+import com.echecs.PartieEchecs;
 public class SalonPrive {
     private String alias1;
     private String alias2;
@@ -20,7 +20,7 @@ public class SalonPrive {
         this.partieEchecs = null;
     }
 
-    // Méthodes getters et setters
+    // Mï¿½thodes getters et setters
     public String getAlias1() {
         return alias1;
     }
