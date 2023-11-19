@@ -17,7 +17,6 @@ public class Rook extends Piece {
         byte colonne2 = EchecsUtil.indiceColonne(pos2);
 
         PartieEchecs partieEchecs = new PartieEchecs();
-        if(partieEchecs.deplace(pos1,pos2)) {
 
 
             if (pos1.estSurLaMemeColonneQue(pos2) == (false) || pos1.estSurLaMemeLigneQue(pos2) == (false)) {
@@ -59,7 +58,6 @@ public class Rook extends Piece {
 
                 }
 
-            }
             return true;
         }
         return false;

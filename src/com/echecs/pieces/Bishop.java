@@ -17,7 +17,6 @@ public class Bishop extends Piece{
         byte colonne2 = EchecsUtil.indiceColonne(pos2);
 
         PartieEchecs partieEchecs = new PartieEchecs();
-        if(partieEchecs.deplace(pos1,pos2)){
             if(pos1.estSurLaMemeDiagonaleQue(pos2)){
                 if(ligne1<ligne2 && colonne1<colonne2){
                     int j=ligne1;
@@ -61,7 +60,7 @@ public class Bishop extends Piece{
                     return true;
                 }
             }
-        }
+
 
 
 
