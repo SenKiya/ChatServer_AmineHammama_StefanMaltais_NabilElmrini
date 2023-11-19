@@ -201,6 +201,11 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     cnx.envoyer(serveur.historique());
                     break;
 
+                case "MOVE":
+                    msg = evenement.getArgument();
+
+                    break;
+
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
                     cnx.envoyer(msg);
