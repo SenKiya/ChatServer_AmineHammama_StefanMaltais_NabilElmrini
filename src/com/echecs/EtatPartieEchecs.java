@@ -53,9 +53,9 @@ public class EtatPartieEchecs {
 
     @Override
     public String toString() {
-        String result="";
+        String result="\n";
         for(int i = 0; i<etatEchiquier.length; i++){
-            result+=(i+1);
+            result+=(8-i);
             for(int j = 0; j<etatEchiquier[i].length; j++){
                 result+=" ";
                 if(etatEchiquier[i][j]!=' '){

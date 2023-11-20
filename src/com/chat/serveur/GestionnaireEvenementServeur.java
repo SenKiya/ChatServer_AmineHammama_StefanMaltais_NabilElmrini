@@ -293,6 +293,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     byte posI2 = 0, posF2 = 0;
 
 
+
+
                     boolean possible;
                     if(msg.length()<5){
                         posI1 = msg.charAt(0);
