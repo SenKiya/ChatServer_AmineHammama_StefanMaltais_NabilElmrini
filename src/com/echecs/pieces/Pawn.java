@@ -17,47 +17,56 @@ public class Pawn extends Piece {
         byte colonne2 = EchecsUtil.indiceColonne(pos2);
 
         PartieEchecs partieEchecs = new PartieEchecs();
-            if(pos1.estSurLaMemeDiagonaleQue(pos2)){
-                if(ligne1<ligne2 && colonne1<colonne2){
-                    for(int i = colonne1; i<colonne2;i++){
-                        for(int j = ligne1; j<ligne2;j++){
-                            if(echiquier[i][j]!=null){
+            if (pos1.estSurLaMemeDiagonaleQue(pos2)) {
+                if (ligne1 < ligne2 && colonne1 < colonne2) {
+                    for (int i = colonne1; i < colonne2; i++) {
+                        for (int j = ligne1; j < ligne2; j++) {
+                            if (echiquier[i][j] != null) {
                                 return false;
                             }
                         }
                     }
-                }
-                else if(ligne1<ligne2 && colonne1>colonne2){
-                    for(int i = colonne1; i>colonne2;i--){
-                        for(int j = ligne1; j<ligne2;j++){
-                            if(echiquier[i][j]!=null){
+                } else if (ligne1 < ligne2 && colonne1 > colonne2) {
+                    for (int i = colonne1; i > colonne2; i--) {
+                        for (int j = ligne1; j < ligne2; j++) {
+                            if (echiquier[i][j] != null) {
+                                return false;
+                            }
+                        }
+                    }
+
+                } else if (ligne1 > ligne2 && colonne1 < colonne2) {
+                    for (int i = colonne1; i < colonne2; i++) {
+                        for (int j = ligne1; j > ligne2; j--) {
+                            if (echiquier[i][j] != null) {
+                                return false;
+                            }
+                        }
+                    }
+
+                } else if (ligne1 > ligne2 && colonne1 > colonne2) {
+                    for (int i = colonne1; i > colonne2; i--) {
+                        for (int j = ligne1; j > ligne2; j--) {
+                            if (echiquier[i][j] != null) {
                                 return false;
                             }
                         }
                     }
 
                 }
-                else if(ligne1>ligne2 && colonne1<colonne2){
-                    for(int i = colonne1; i<colonne2;i++){
-                        for(int j = ligne1; j>ligne2;j--){
-                            if(echiquier[i][j]!=null){
-                                return false;
-                            }
-                        }
-                    }
 
-                }
-                else if(ligne1>ligne2 && colonne1>colonne2){
-                    for(int i = colonne1; i>colonne2;i--){
-                        for(int j = ligne1; j>ligne2;j--){
-                            if(echiquier[i][j]!=null){
-                                return false;
-                            }
-                        }
-                    }
-
-                }
             }
+        if(pos1.estSurLaMemeColonneQue(pos2)&&pos1.estVoisineDe(pos2)){
+            if(ligne1>ligne2 && echiquier[ligne1][colonne1].getCouleur()=='b')
+            {
+                return true;
+
+            }else if(ligne2>ligne1 && echiquier[ligne1][colonne1].getCouleur()=='n')
+            {
+                return true;
+
+            }
+        }
 
 
 

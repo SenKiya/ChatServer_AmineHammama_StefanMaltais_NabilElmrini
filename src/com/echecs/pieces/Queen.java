@@ -14,32 +14,38 @@ public class Queen extends Piece {
         byte colonne1 = EchecsUtil.indiceColonne(pos1);
         byte ligne2 = EchecsUtil.indiceLigne(pos2);
         byte colonne2 = EchecsUtil.indiceColonne(pos2);
+
+        if(!pos1.estSurLaMemeColonneQue(pos2)&&!pos1.estSurLaMemeLigneQue(pos2)&&!pos1.estSurLaMemeDiagonaleQue(pos2)){
+            return false;
+        }
+
         if (pos1.estSurLaMemeColonneQue(pos2)) {
             if (ligne1 > ligne2) {
-                for (int i = ligne1; i < ligne2; i--) {
+                for (int i = ligne2; i < ligne1; i++) {
                     if (echiquier[i][colonne1] != null) {
                         return false;
                     }
 
                 }
             } else {
-                for (int i = ligne1; i > ligne2; i++) {
+                for (int i = ligne2; i > ligne1; i--) {
                     if (echiquier[i][colonne1] != null) {
                         return false;
                     }
 
                 }
             }
+
         } else if (pos1.estSurLaMemeLigneQue(pos2)) {
             if (colonne1 > colonne2) {
-                for (int i = colonne1; i < colonne2; i--) {
+                for (int i = colonne2; i < colonne1; i++) {
                     if (echiquier[ligne1][i] != null) {
                         return false;
                     }
 
                 }
             } else {
-                for (int i = colonne1; i > colonne2; i++) {
+                for (int i = colonne2; i > colonne1; i--) {
                     if (echiquier[ligne1][i] != null) {
                         return false;
                     }
@@ -50,8 +56,8 @@ public class Queen extends Piece {
 
         } else if(pos1.estSurLaMemeDiagonaleQue(pos2)){
             if(ligne1<ligne2 && colonne1<colonne2){
-                int j=ligne1;
-                for(int i = colonne1; i<colonne2;i++){
+                int j=ligne2;
+                for(int i = colonne2; i>colonne1;i--){
                     if(echiquier[j][i]!=null){
                         return false;
                     }
@@ -59,8 +65,8 @@ public class Queen extends Piece {
                 }
             }
             else if(ligne1<ligne2 && colonne1>colonne2){
-                int j=ligne1;
-                for(int i = colonne1; i>colonne2;i--){
+                int j=ligne2;
+                for(int i = colonne2; i<colonne1;i++){
                     if(echiquier[j][i]!=null){
                         return false;
                     }
@@ -70,8 +76,8 @@ public class Queen extends Piece {
 
             }
             else if(ligne1>ligne2 && colonne1<colonne2){
-                int j=ligne1;
-                for(int i = colonne1; i<colonne2;i++){
+                int j=ligne2;
+                for(int i = colonne2; i>colonne1;i--){
                     if(echiquier[j][i]!=null){
                         return false;
                     }
@@ -79,18 +85,23 @@ public class Queen extends Piece {
                 }
             }
             else if(ligne1>ligne2 && colonne1>colonne2){
-                int j=ligne1;
-                for(int i = colonne1; i>colonne2;i--){
+                int j=ligne2;
+                for(int i = colonne2; i<colonne1;i++){
                     if(echiquier[j][i]!=null){
                         return false;
                     }
                     j--;
                 }
             }
-            if(echiquier[colonne1][ligne1].getCouleur()!=echiquier[colonne2][ligne2].getCouleur()){
-                return true;
-            }
+
         }
-    return false;
+
+        if(echiquier[ligne2][colonne2]==null){
+            return true;
+        }else if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[ligne2][colonne2].getCouleur()){
+            return true;
+        }
+
+        return false;
     }
 }

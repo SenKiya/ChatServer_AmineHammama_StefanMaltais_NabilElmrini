@@ -100,10 +100,11 @@ public class    PartieEchecs {
     public boolean deplace(Position initiale, Position finale) {
         Piece a = echiquier[EchecsUtil.indiceLigne(initiale)][EchecsUtil.indiceColonne(initiale)];
         Piece b = echiquier[EchecsUtil.indiceLigne(finale)][EchecsUtil.indiceColonne(finale)];
-        if (a.equals(b)) {
+
+        if (a==null) {
             return false;
         }
-        if (a.equals(null)) {
+        if (a.equals(b)) {
             return false;
         }
         if (EchecsUtil.indiceLigne(initiale) > 8 || EchecsUtil.indiceLigne(initiale) < 0 || EchecsUtil.indiceLigne(finale) > 8 || EchecsUtil.indiceLigne(finale) < 0) {
@@ -179,7 +180,7 @@ public class    PartieEchecs {
                 n = true;
 
             } else if (p.peutSeDeplacer(temp, roiPosb, echiquier) && p.getCouleur()!='b') {
-                System.out.println(p.getClass());
+
                 b = true;
             }
         }
