@@ -18,8 +18,12 @@ public class Horse extends Piece{
         PartieEchecs partieEchecs = new PartieEchecs();
         byte compCol=  (byte)Math.abs(colonne1-colonne2);
         byte compLig= (byte)Math.abs(ligne1-ligne2);
-            if(compLig+compCol==3 && compLig>0 && compCol>0){
-                return true;
+            if(compLig+compCol==3 && compLig>0 && compCol>0 ){
+                if(echiquier[ligne2][colonne2]==null){
+                    return true;
+                }else if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[ligne2][colonne2].getCouleur()){
+                    return true;
+                }
             }
 
         return false;
