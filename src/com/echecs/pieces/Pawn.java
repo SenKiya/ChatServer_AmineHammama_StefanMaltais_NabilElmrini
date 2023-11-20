@@ -15,47 +15,60 @@ public class Pawn extends Piece {
         byte colonne1 = EchecsUtil.indiceColonne(pos1);
         byte ligne2 = EchecsUtil.indiceLigne(pos2);
         byte colonne2 = EchecsUtil.indiceColonne(pos2);
+        if(!pos1.estVoisineDe(pos2)){
+            return false;
+        }
 
-        PartieEchecs partieEchecs = new PartieEchecs();
-            if (pos1.estSurLaMemeDiagonaleQue(pos2)) {
-                if (ligne1 < ligne2 && colonne1 < colonne2) {
-                    for (int i = colonne1; i < colonne2; i++) {
-                        for (int j = ligne1; j < ligne2; j++) {
-                            if (echiquier[i][j] != null) {
-                                return false;
-                            }
-                        }
-                    }
-                } else if (ligne1 < ligne2 && colonne1 > colonne2) {
-                    for (int i = colonne1; i > colonne2; i--) {
-                        for (int j = ligne1; j < ligne2; j++) {
-                            if (echiquier[i][j] != null) {
-                                return false;
-                            }
-                        }
-                    }
 
-                } else if (ligne1 > ligne2 && colonne1 < colonne2) {
-                    for (int i = colonne1; i < colonne2; i++) {
-                        for (int j = ligne1; j > ligne2; j--) {
-                            if (echiquier[i][j] != null) {
-                                return false;
-                            }
+        if(pos1.estSurLaMemeDiagonaleQue(pos2)) {
+            if (ligne1 < ligne2 && colonne1 < colonne2) {
+                int j = ligne1 + 1;
+                for (int i = colonne1 + 1; i < colonne2 + 1; i++) {
+                    if (echiquier[j][i] != null) {
+                        if (echiquier[ligne1][colonne1].getCouleur() != echiquier[j][i].getCouleur() && i == colonne2) {
+                            return true;
                         }
+                        return false;
                     }
-
-                } else if (ligne1 > ligne2 && colonne1 > colonne2) {
-                    for (int i = colonne1; i > colonne2; i--) {
-                        for (int j = ligne1; j > ligne2; j--) {
-                            if (echiquier[i][j] != null) {
-                                return false;
-                            }
+                    j++;
+                }
+            } else if (ligne1 < ligne2 && colonne1 > colonne2) {
+                int j = ligne1 + 1;
+                for (int i = colonne1 - 1; i > colonne2 - 1; i--) {
+                    if (echiquier[j][i] != null) {
+                        if (echiquier[ligne1][colonne1].getCouleur() != echiquier[j][i].getCouleur() && i == colonne2) {
+                            return true;
                         }
+                        return false;
                     }
-
+                    j++;
                 }
 
+
+            } else if (ligne1 > ligne2 && colonne1 < colonne2) {
+                int j = ligne1 - 1;
+                for (int i = colonne1 + 1; i < colonne2 + 1; i++) {
+                    if (echiquier[j][i] != null) {
+                        if (echiquier[ligne1][colonne1].getCouleur() != echiquier[j][i].getCouleur() && i == colonne2) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    j--;
+                }
+            } else if (ligne1 > ligne2 && colonne1 > colonne2) {
+                int j = ligne1 - 1;
+                for (int i = colonne1 - 1; i > colonne2 - 1; i--) {
+                    if (echiquier[j][i] != null) {
+                        if (echiquier[ligne1][colonne1].getCouleur() != echiquier[j][i].getCouleur() && i == colonne2) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    j--;
+                }
             }
+        }
         if(pos1.estSurLaMemeColonneQue(pos2)&&pos1.estVoisineDe(pos2)){
             if(ligne1>ligne2 && echiquier[ligne1][colonne1].getCouleur()=='b')
             {
