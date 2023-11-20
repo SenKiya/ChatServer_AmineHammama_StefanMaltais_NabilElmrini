@@ -47,8 +47,8 @@ public class    PartieEchecs {
         echiquier[0][0] = new Rook('n');
         echiquier[0][1] = new Horse('n');
         echiquier[0][2] = new Bishop('n');
-        echiquier[0][3] = new King('n');
-        echiquier[0][4] = new Queen('n');
+        echiquier[0][3] = new Queen('n');
+        echiquier[0][4] = new King('n');
         echiquier[0][5] = new Bishop('n');
         echiquier[0][6] = new Horse('n');
         echiquier[0][7] = new Rook('n');
@@ -60,8 +60,8 @@ public class    PartieEchecs {
         echiquier[7][0] = new Rook('b');
         echiquier[7][1] = new Horse('b');
         echiquier[7][2] = new Bishop('b');
-        echiquier[7][3] = new King('b');
-        echiquier[7][4] = new Queen('b');
+        echiquier[7][3] = new Queen('b');
+        echiquier[7][4] = new King('b');
         echiquier[7][5] = new Bishop('b');
         echiquier[7][6] = new Horse('b');
         echiquier[7][7] = new Rook('b');
@@ -112,9 +112,11 @@ public class    PartieEchecs {
         if (tour != (a.getCouleur())) {
             return false;
         }
-        if (b.getCouleur() == 'b' || b.getCouleur() == 'n') {
-            if (b.getCouleur() == a.getCouleur()) {
-                return false;
+        if(b!=null){
+            if (b.getCouleur() == 'b' || b.getCouleur() == 'n') {
+                if (b.getCouleur() == a.getCouleur()) {
+                    return false;
+                }
             }
         }
         if(a.peutSeDeplacer(initiale,finale,echiquier)){
@@ -150,6 +152,7 @@ public class    PartieEchecs {
         boolean b = false;
         boolean n = false;
         Piece p;
+        positions.clear();
         for (int i = 0; i < echiquier.length; i++) {
             for (int j = 0; j < echiquier[i].length; j++) {
                 if (echiquier[i][j] != null) {
@@ -169,13 +172,14 @@ public class    PartieEchecs {
         }
 
 
-        for (int m = 0; m<(positions.size()-1); m++) {
+        for (int m = 0; m<(positions.size()); m++) {
             Position temp = positions.get(m);
             p = echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)];
-            if (p.peutSeDeplacer(temp, roiPosn, echiquier)) {
+            if (p.peutSeDeplacer(temp, roiPosn, echiquier) && p.getCouleur()!='n') {
                 n = true;
 
-            } else if (p.peutSeDeplacer(temp, roiPosb, echiquier)) {
+            } else if (p.peutSeDeplacer(temp, roiPosb, echiquier) && p.getCouleur()!='b') {
+                System.out.println(p.getClass());
                 b = true;
             }
         }
@@ -187,6 +191,7 @@ public class    PartieEchecs {
         } else if (n) {
             result = 'n';
         }
+
         return result;
     }
     public boolean deplacerTempVerifEchec(Position pos1, Position pos2){
@@ -206,8 +211,10 @@ public class    PartieEchecs {
         if(deplace(pos1,pos2)){
             echiquier[(int)EchecsUtil.indiceLigne(pos2)][(int)EchecsUtil.indiceColonne(pos2)]=echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)];
             echiquier[EchecsUtil.indiceLigne(pos1)][EchecsUtil.indiceColonne(pos1)] =null;
-            estEnEchec();
-            checkmate(estEnEchec());
+            char echec = estEnEchec();
+            if(echec!='x'){
+                checkmate(echec);
+            }
             changerTour();
             etat.setEtatEchiquier(updateBoard());
             return true;
@@ -220,8 +227,8 @@ public class    PartieEchecs {
         iterateur = positions.iterator();
         boolean there = true;
         if(res!='x'){
-            while (iterateur.hasNext()){
-                Position temp=iterateur.next();
+            for (int m = 0; m<positions.size(); m++){
+                Position temp=positions.get(m);
                 if (echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)].getCouleur()==res){
                     for(int i=0;i<8;i++){
                         for(int j=0;j<8;j++){
@@ -233,7 +240,8 @@ public class    PartieEchecs {
                                 if (estEnEchec() != res) {
                                     echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)] = echiquier[i][j];
                                     echiquier[i][j] = b;
-                                    there = false;
+                                    positions.clear();
+                                    return false;
                                 }else {
                                     echiquier[EchecsUtil.indiceLigne(temp)][EchecsUtil.indiceColonne(temp)] = echiquier[i][j];
                                     echiquier[i][j] = b;
@@ -247,7 +255,7 @@ public class    PartieEchecs {
 
 
         positions.clear();
-        return there;
+        return true;
     }
 
     private char[][] updateBoard(){

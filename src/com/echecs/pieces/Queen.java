@@ -48,14 +48,11 @@ public class Queen extends Piece {
 
             }
 
-        } else {return true;}
-
-
-        if(pos1.estSurLaMemeDiagonaleQue(pos2)){
+        } else if(pos1.estSurLaMemeDiagonaleQue(pos2)){
             if(ligne1<ligne2 && colonne1<colonne2){
                 int j=ligne1;
                 for(int i = colonne1; i<colonne2;i++){
-                    if(echiquier[i][j]!=null){
+                    if(echiquier[j][i]!=null){
                         return false;
                     }
                     j++;
@@ -64,7 +61,7 @@ public class Queen extends Piece {
             else if(ligne1<ligne2 && colonne1>colonne2){
                 int j=ligne1;
                 for(int i = colonne1; i>colonne2;i--){
-                    if(echiquier[i][j]!=null){
+                    if(echiquier[j][i]!=null){
                         return false;
                     }
                     j++;
@@ -75,7 +72,7 @@ public class Queen extends Piece {
             else if(ligne1>ligne2 && colonne1<colonne2){
                 int j=ligne1;
                 for(int i = colonne1; i<colonne2;i++){
-                    if(echiquier[i][j]!=null){
+                    if(echiquier[j][i]!=null){
                         return false;
                     }
                     j--;
@@ -84,7 +81,7 @@ public class Queen extends Piece {
             else if(ligne1>ligne2 && colonne1>colonne2){
                 int j=ligne1;
                 for(int i = colonne1; i>colonne2;i--){
-                    if(echiquier[i][j]!=null){
+                    if(echiquier[j][i]!=null){
                         return false;
                     }
                     j--;
