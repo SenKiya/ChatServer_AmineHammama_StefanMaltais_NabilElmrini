@@ -25,15 +25,21 @@ public class Rook extends Piece {
 
         if (pos1.estSurLaMemeColonneQue(pos2)) {
             if (ligne1 > ligne2) {
-                for (int i = ligne2; i < ligne1; i++) {
+                for (int i = ligne1-1; i > ligne2-1; i--) {
                     if (echiquier[i][colonne1] != null) {
+                        if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[i][colonne1].getCouleur()&&i==ligne2){
+                            return true;
+                        }
                         return false;
                     }
 
                 }
             } else {
-                for (int i = ligne2; i > ligne1; i--) {
+                for (int i = ligne1+1; i < ligne2+1; i++) {
                     if (echiquier[i][colonne1] != null) {
+                        if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[i][colonne1].getCouleur()&&i==ligne2){
+                            return true;
+                        }
                         return false;
                     }
 
@@ -42,15 +48,21 @@ public class Rook extends Piece {
 
         } else if (pos1.estSurLaMemeLigneQue(pos2)) {
             if (colonne1 > colonne2) {
-                for (int i = colonne2; i < colonne1; i++) {
+                for (int i = colonne1-1; i > colonne2-1; i--) {
                     if (echiquier[ligne1][i] != null) {
+                        if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[ligne1][i].getCouleur()&&i==colonne2){
+                            return true;
+                        }
                         return false;
                     }
 
                 }
             } else {
-                for (int i = colonne2; i > colonne1; i--) {
+                for (int i = colonne1+1; i < colonne2+1; i++) {
                     if (echiquier[ligne1][i] != null) {
+                        if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[ligne1][i].getCouleur()&&i==colonne2){
+                            return true;
+                        }
                         return false;
                     }
 

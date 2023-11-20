@@ -19,18 +19,24 @@ public class Bishop extends Piece{
         PartieEchecs partieEchecs = new PartieEchecs();
             if(pos1.estSurLaMemeDiagonaleQue(pos2)){
                 if(ligne1<ligne2 && colonne1<colonne2){
-                    int j=ligne2;
-                    for(int i = colonne2; i>colonne1;i--){
+                    int j=ligne1+1;
+                    for(int i = colonne1+1; i<colonne2+1;i++){
                         if(echiquier[j][i]!=null){
+                            if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[j][i].getCouleur()&&i==colonne2){
+                                return true;
+                            }
                             return false;
                         }
                         j++;
                     }
                 }
                 else if(ligne1<ligne2 && colonne1>colonne2){
-                    int j=ligne2;
-                    for(int i = colonne2; i<colonne1;i++){
+                    int j=ligne1+1;
+                    for(int i = colonne1-1; i>colonne2-1;i--){
                         if(echiquier[j][i]!=null){
+                            if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[j][i].getCouleur()&&i==colonne2){
+                                return true;
+                            }
                             return false;
                         }
                         j++;
@@ -39,18 +45,24 @@ public class Bishop extends Piece{
 
                 }
                 else if(ligne1>ligne2 && colonne1<colonne2){
-                    int j=ligne2;
-                    for(int i = colonne2; i>colonne1;i--){
+                    int j=ligne1-1;
+                    for(int i = colonne1+1; i<colonne2+1;i++){
                         if(echiquier[j][i]!=null){
+                            if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[j][i].getCouleur()&&i==colonne2){
+                                return true;
+                            }
                             return false;
                         }
                         j--;
                     }
                 }
                 else if(ligne1>ligne2 && colonne1>colonne2){
-                    int j=ligne2;
-                    for(int i = colonne2; i<colonne1;i++){
+                    int j=ligne1-1;
+                    for(int i = colonne1-1; i>colonne2-1;i--){
                         if(echiquier[j][i]!=null){
+                            if(echiquier[ligne1][colonne1].getCouleur()!=echiquier[j][i].getCouleur()&&i==colonne2){
+                                return true;
+                            }
                             return false;
                         }
                         j--;
