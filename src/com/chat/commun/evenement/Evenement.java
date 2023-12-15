@@ -1,24 +1,24 @@
 package com.chat.commun.evenement;
 
 /**
- * Cette classe représente un événement. Un événement est caractérisé par sa
- * source (objet sur lequel s'est produit l'événement) son type (String) et peut avoir des
- * arguments regroupés dans une chaine de caractères (String).
+ * Cette classe reprï¿½sente un ï¿½vï¿½nement. Un ï¿½vï¿½nement est caractï¿½risï¿½ par sa
+ * source (objet sur lequel s'est produit l'ï¿½vï¿½nement) son type (String) et peut avoir des
+ * arguments regroupï¿½s dans une chaine de caractï¿½res (String).
  *
- * @author Abdelmoumène Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
+ * @author Abdelmoumï¿½ne Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
  * @version 1.0
  * @since 2023-09-01
  */
-public class Evenement {
+public class Evenement{
     private Object source;
     private final String type, argument;
 
     /**
-     * Construit un événement.
+     * Construit un ï¿½vï¿½nement.
      *
-     * @param source   La source de l'événement
-     * @param type     Le type de l'événement
-     * @param argument Chaine de caractères contenant les arguments de l'événement
+     * @param source   La source de l'ï¿½vï¿½nement
+     * @param type     Le type de l'ï¿½vï¿½nement
+     * @param argument Chaine de caractï¿½res contenant les arguments de l'ï¿½vï¿½nement
      */
     public Evenement(Object source, String type, String argument) {
         this.source = source;
@@ -27,27 +27,27 @@ public class Evenement {
     }
 
     /**
-     * Retourne la source de l'événement
+     * Retourne la source de l'ï¿½vï¿½nement
      *
-     * @return Object source de l'événement
+     * @return Object source de l'ï¿½vï¿½nement
      */
     public Object getSource() {
         return source;
     }
 
     /**
-     * Retourne le type de l'événement
+     * Retourne le type de l'ï¿½vï¿½nement
      *
-     * @return String type de l'événement
+     * @return String type de l'ï¿½vï¿½nement
      */
     public String getType() {
         return type;
     }
 
     /**
-     * Retourne l'argument de l'événement
+     * Retourne l'argument de l'ï¿½vï¿½nement
      *
-     * @return String argument de l'événement
+     * @return String argument de l'ï¿½vï¿½nement
      */
     public String getArgument() {
         return argument;
